@@ -1,4 +1,4 @@
-//+------------------------------------------------------------------+
+﻿//+------------------------------------------------------------------+
 //|                                      MQ5 Trade Assistant 1.0.mq5 |
 //|                                                       Supertonka |
 //|                         https://www.instagram.com/diamondlabs_fx |
@@ -24,7 +24,7 @@ CDragHandler   Dragger;
 int OnInit()
   {
    Panel.Create(0, "MQL Trade Assistant", 0, 40, 40);
-   ChartObj.DrawLevels(); //TP/SL/BE lines + zone
+   ChartObj.DrawLevels();     //TP/SL/BE lines + zone
    ChartRedraw();
    return(INIT_SUCCEEDED);
   }
@@ -41,7 +41,23 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 void OnTick()
   {
-//---
-   
+// 
+   Panel.UpdatePrices();      //refresh bid/ask on buy/sell btns
+   Panel.UpdatePnL();         //live P&L update on cahrt label
+  }
+  
+void OnChartEvent(const int id,
+                  const long &lparam,
+                  const double &dparam,
+                  const string &sparam)
+  {
+   // If a chart object was dragged (TP/SL/BE lines) → sync panel
+   if(Dragger.OnEvent(id, lparam, dparam, sparam))
+     {
+      Panel.SyncFromChart();
+      return;
+     }
+   // Otherwise pass event to panel (button clicks, inputs etc)
+   Panel.OnEvent(id, lparam, dparam, sparam);
   }
 //+------------------------------------------------------------------+
