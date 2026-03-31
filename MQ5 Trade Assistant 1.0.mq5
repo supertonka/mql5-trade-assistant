@@ -33,8 +33,8 @@ int OnInit()
 //+------------------------------------------------------------------+
 void OnDeinit(const int reason)
   {
-//---
-   
+   Panel.Destroy();
+   ChartObj.DeleteAll();
   }
 //+------------------------------------------------------------------+
 //| Expert tick function                                             |
