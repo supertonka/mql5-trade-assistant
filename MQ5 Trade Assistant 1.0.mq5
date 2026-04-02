@@ -13,6 +13,7 @@
 #include       <TA/Chart/ChartObjects.mqh>
 #include       <TA/Chart/DragHandler.mqh>
 #include       <TA/Trading/RiskCalc.mqh>
+bool           g_initialized  =  false;
 
 CPanelMain     Panel;
 CChartObjects  ChartObj;
@@ -27,19 +28,13 @@ int OnInit()
    GlobalState.symbol    = Symbol();
    GlobalState.riskPct   = 1.0;
    GlobalState.lot       = 0.01;
-   GlobalState.entryPrice = SymbolInfoDouble(Symbol(), SYMBOL_ASK);
-   GlobalState.tpPrice   = GlobalState.entryPrice + 0.00200;
-   GlobalState.slPrice   = GlobalState.entryPrice - 0.00100;
-   GlobalState.tpPips    = 200;
-   GlobalState.slPips    = 100;
-   GlobalState.rr        = 2.0;
-   GlobalState.bePrice   = GlobalState.entryPrice;
    GlobalState.bePips    = 0;
    GlobalState.magic    = 123456;
    GlobalState.slippage = 10;
    GlobalState.comment  = "TA";
 
    ChartObj.Init(0);
+   ChartSetInteger(0,CHART_SHIFT,true);
    Panel.Create(0, "MQL Trade Assistant", 0, 40, 40);
    ChartObj.DrawLevels();
    ChartRedraw();
@@ -58,7 +53,18 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 void OnTick()
   {
-// 
+   if(!g_initialized)
+     {
+      GlobalState.entryPrice = SymbolInfoDouble(Symbol(), SYMBOL_ASK);
+      GlobalState.tpPrice    = GlobalState.entryPrice + RiskCalc.PipsToPrice(200);
+      GlobalState.slPrice    = GlobalState.entryPrice - RiskCalc.PipsToPrice(100);
+      GlobalState.tpPips     = 200;
+      GlobalState.slPips     = 100;
+      GlobalState.rr         = 2.0;
+      ChartObj.DrawLevels();
+      g_initialized = true;
+     } 
+
    Panel.UpdatePrices();      //refresh bid/ask on buy/sell btns
    Panel.UpdatePnL();         //live P&L update on cahrt label
   }
