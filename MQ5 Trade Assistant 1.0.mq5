@@ -25,6 +25,7 @@ CDragHandler   Dragger;
 int OnInit()
   {
    // Seed initial state
+   Print("ONINIT REACHED");
    GlobalState.symbol    = Symbol();
    GlobalState.riskPct   = 1.0;
    GlobalState.lot       = 0.01;
