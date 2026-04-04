@@ -25,7 +25,7 @@ CDragHandler   Dragger;
 int OnInit()
   {
    // Seed initial state
-   Print("ONINIT REACHED");
+   //Print("ONINIT REACHED");
    GlobalState.symbol    = Symbol();
    GlobalState.riskPct   = 1.0;
    GlobalState.lot       = 0.01;
@@ -75,6 +75,7 @@ void OnChartEvent(const int id,
                   const double &dparam,
                   const string &sparam)
   {
+   //Print("OnChartEvent id=", id, " sparam=", sparam);
    // If a chart object was dragged (TP/SL/BE lines) → sync panel
    if(Dragger.OnEvent(id, lparam, dparam, sparam))
      {
